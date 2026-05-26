@@ -1,0 +1,59 @@
+:root {
+  /* Fondos */
+  --bg:         #07111f;
+  --panel:      #0d1d32;
+  --panel-2:    #112240;
+  --panel-3:    #0a1628;
+
+  /* Bordes */
+  --border:     rgba(255,255,255,.07);
+  --border-2:   rgba(255,255,255,.12);
+  --border-3:   rgba(255,255,255,.20);
+
+  /* Texto */
+  --text:       #e8f0ff;
+  --muted:      #7a93b8;
+
+  /* Acento principal */
+  --accent:         #2dd4bf;
+  --accent-dim:     rgba(45,212,191,.12);
+  --accent-border:  rgba(45,212,191,.25);
+
+  /* Dorado */
+  --gold:           #fbbf24;
+  --gold-dim:       rgba(251,191,36,.12);
+  --gold-border:    rgba(251,191,36,.25);
+
+  /* Semánticos */
+  --success:        #4ade80;
+  --success-dim:    rgba(74,222,128,.10);
+  --success-border: rgba(74,222,128,.22);
+
+  --warn:           #fb923c;
+  --warn-dim:       rgba(251,146,60,.10);
+  --warn-border:    rgba(251,146,60,.25);
+
+  --danger:         #f87171;
+  --danger-dim:     rgba(248,113,113,.10);
+  --danger-border:  rgba(248,113,113,.25);
+
+  --purple:         #a78bfa;
+  --purple-dim:     rgba(167,139,250,.12);
+  --purple-border:  rgba(167,139,250,.25);
+
+  --blue:           #60a5fa;
+  --blue-dim:       rgba(96,165,250,.12);
+  --blue-border:    rgba(96,165,250,.25);
+
+  /* Layout */
+  --sidebar-w:  240px;
+
+  /* Radios */
+  --radius:     14px;
+  --radius-sm:  8px;
+  --radius-xs:  6px;
+
+  /* Sombras */
+  --shadow:     0 8px 32px rgba(0,0,0,.35);
+  --shadow-lg:  0 16px 48px rgba(0,0,0,.45);
+}
