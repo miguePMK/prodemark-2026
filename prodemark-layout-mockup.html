@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODEMARK 2026 · Layout Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:        #07111f;
+  --panel:     #0d1d32;
+  --panel-2:   #112240;
+  --panel-3:   #0a1628;
+  --border:    rgba(255,255,255,.07);
+  --border-2:  rgba(255,255,255,.12);
+  --text:      #e8f0ff;
+  --muted:     #7a93b8;
+  --accent:    #2dd4bf;
+  --accent-dim:rgba(45,212,191,.12);
+  --gold:      #fbbf24;
+  --gold-dim:  rgba(251,191,36,.12);
+  --danger:    #f87171;
+  --success:   #4ade80;
+  --warn:      #fb923c;
+  --purple:    #a78bfa;
+  --sidebar-w: 240px;
+  --radius:    14px;
+  --radius-sm: 8px;
+  --shadow:    0 8px 32px rgba(0,0,0,.35);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Outfit',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  line-height:1.5;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ═══════════════════════════════════════
+   BG GLOW (subtle, fijo detrás de todo)
+═══════════════════════════════════════ */
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 0%, rgba(45,212,191,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(251,191,36,.07) 0%, transparent 55%);
+}
+
+/* ═══════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════ */
+.app{
+  display:flex;height:100vh;overflow:hidden;
+  position:relative;z-index:1;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sidebar{
+  width:var(--sidebar-w);
+  min-width:var(--sidebar-w);
+  background:var(--panel-3);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  height:100vh;
+  overflow:hidden;
+  position:relative;z-index:10;
+}
+
+.sidebar-top{
+  padding:20px 16px 0;
+}
+
+.sidebar-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:0 4px 20px;
+  border-bottom:1px solid var(--border);
+}
+.sidebar-brand-logo{
+  width:36px;height:36px;flex-shrink:0;
+  color:var(--accent);
+}
+.sidebar-brand-logo svg{width:100%;height:100%}
+.sidebar-brand-text{min-width:0}
+.sidebar-brand-name{
+  font-size:13px;font-weight:700;letter-spacing:.8px;
+  color:var(--text);white-space:nowrap;
+}
+.sidebar-brand-sub{
+  font-size:9px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.3px;font-weight:500;
+  margin-top:2px;
+}
+
+.sidebar-nav{
+  padding:14px 8px;flex:1;overflow-y:auto;
+  display:flex;flex-direction:column;gap:2px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:500;color:var(--muted);
+  transition:all .15s;cursor:pointer;
+  border:1px solid transparent;
+  position:relative;
+}
+.nav-item:hover{
+  background:rgba(255,255,255,.04);color:var(--text);
+}
+.nav-item.active{
+  background:var(--accent-dim);
+  color:var(--accent);
+  border-color:rgba(45,212,191,.2);
+}
+.nav-item .icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-item .badge-dot{
+  margin-left:auto;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--danger);flex-shrink:0;
+}
+
+.sidebar-section-label{
+  font-size:9px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.5px;
+  padding:12px 12px 4px;
+}
+
+.sidebar-bottom{
+  padding:12px;
+  border-top:1px solid var(--border);
+  background:var(--panel-3);
+}
+.sidebar-user{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 10px;
+  border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  cursor:pointer;transition:border-color .15s;
+}
+.sidebar-user:hover{border-color:var(--border-2)}
+.sidebar-user .avatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  color:#07111f;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:11px;letter-spacing:.5px;
+}
+.sidebar-user .info{min-width:0;flex:1}
+.sidebar-user .uname{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user .urole{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:1px}
+.sidebar-user .pts-pill{
+  font-size:11px;font-weight:700;color:var(--accent);
+  background:var(--accent-dim);padding:3px 8px;border-radius:20px;
+  white-space:nowrap;flex-shrink:0;
+  border:1px solid rgba(45,212,191,.2);
+}
+
+/* ═══════════════════════════════════════
+   CONTENT AREA
+═══════════════════════════════════════ */
+.content{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:28px 32px;
+  display:flex;flex-direction:column;gap:0;
+}
+
+.view{display:none}
+.view.active{display:flex;flex-direction:column;gap:20px}
+
+.view-title{
+  font-size:28px;font-weight:700;color:var(--text);
+  letter-spacing:-.3px;line-height:1.1;
+}
+.view-sub{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* ═══════════════════════════════════════
+   CARDS
+═══════════════════════════════════════ */
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+}
+.card-title{
+  font-size:11px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.2px;
+  margin-bottom:16px;display:flex;align-items:center;gap:6px;
+}
+.card-title .ct-icon{font-size:14px}
+
+/* ═══════════════════════════════════════
+   DASHBOARD LAYOUT
+═══════════════════════════════════════ */
+.dash-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:12px;
+}
+.dash-grid-wide{
+  display:grid;
+  grid-template-columns:1.6fr 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+/* Stat card */
+.stat-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px 18px;
+  display:flex;flex-direction:column;gap:4px;
+  transition:border-color .2s;
+}
+.stat-card:hover{border-color:var(--border-2)}
+.stat-card .sc-label{
+  font-size:10px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;
+}
+.stat-card .sc-val{
+  font-size:30px;font-weight:700;color:var(--text);
+  letter-spacing:-.5px;line-height:1;margin-top:2px;
+  font-family:'DM Mono',monospace;
+}
+.stat-card .sc-desc{font-size:11px;color:var(--muted)}
+.stat-card.accent{border-color:rgba(45,212,191,.25)}
+.stat-card.accent .sc-val{color:var(--accent)}
+.stat-card.warn .sc-val{color:var(--warn)}
+.stat-card.gold .sc-val{color:var(--gold)}
+
+/* Urgent pill en stat card */
+.urgent-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  background:rgba(248,113,113,.12);color:var(--danger);
+  border:1px solid rgba(248,113,113,.25);
+  padding:2px 7px;border-radius:10px;margin-top:4px;width:fit-content;
+}
+.urgent-pill.ok{
+  background:rgba(74,222,128,.1);color:var(--success);
+  border-color:rgba(74,222,128,.2);
+}
+
+/* ═══════════════════════════════════════
+   COUNTDOWN BANNER
+═══════════════════════════════════════ */
+.countdown-card{
+  background:var(--panel);
+  border:1px solid rgba(45,212,191,.2);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  display:flex;align-items:center;gap:24px;
+  position:relative;overflow:hidden;
+}
+.countdown-card::before{
+  content:'';position:absolute;
+  top:-60px;right:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(45,212,191,.08),transparent 65%);
+  pointer-events:none;
+}
+.cd-left{flex:1;min-width:0}
+.cd-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1.3px}
+.cd-value{
+  font-size:36px;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:-1px;line-height:1.1;margin-top:4px;
+  font-family:'DM Mono',monospace;
+}
+.cd-info{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500}
+.cd-right{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  border-left:1px solid var(--border);padding-left:24px;
+}
+.cd-timer-boxes{display:flex;gap:8px}
+.cd-box{
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:52px;
+}
+.cd-box .n{font-size:22px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;line-height:1}
+.cd-box .u{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:3px;font-weight:600}
+.cd-match-preview{
+  font-size:11px;color:var(--muted);text-align:center;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:8px 12px;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;
+}
+.cd-match-preview .flag{font-size:14px}
+.cd-match-preview .vs{color:var(--muted);font-size:10px;font-weight:600}
+
+/* ═══════════════════════════════════════
+   SPARKLINE CARD
+═══════════════════════════════════════ */
+.sparkline-wrap{position:relative;margin-top:4px}
+.sparkline-wrap svg{width:100%;height:60px;overflow:visible}
+.spark-label-row{
+  display:flex;justify-content:space-between;
+  font-size:10px;color:var(--muted);margin-top:4px;
+}
+
+/* ═══════════════════════════════════════
+   PRÓXIMAS URGENTES (compactas)
+═══════════════════════════════════════ */
+.urgent-list{display:flex;flex-direction:column;gap:8px}
+.urgent-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  transition:border-color .15s;
+  cursor:pointer;
+}
+.urgent-item:hover{border-color:var(--border-2)}
+.urgent-item.sin-pred{border-color:rgba(248,113,113,.2);background:rgba(248,113,113,.04)}
+.urgent-item .ui-time{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--muted);min-width:40px;
+}
+.urgent-item .ui-teams{flex:1;font-size:13px;font-weight:500;color:var(--text)}
+.urgent-item .ui-teams .vs{color:var(--muted);font-size:11px;margin:0 4px}
+.urgent-item .ui-fase{
+  font-size:9px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--accent);
+}
+.urgent-item .ui-pred{
+  font-family:'DM Mono',monospace;font-size:13px;font-weight:600;
+  color:var(--text);background:rgba(255,255,255,.06);
+  padding:3px 10px;border-radius:6px;
+}
+.urgent-item .ui-pred.empty{
+  font-size:10px;font-family:'Outfit',sans-serif;
+  color:var(--danger);background:rgba(248,113,113,.1);
+  border:1px solid rgba(248,113,113,.2);padding:3px 10px;
+}
+.urgent-item .ui-close{
+  font-size:9px;color:var(--warn);font-weight:600;
+  text-transform:uppercase;letter-spacing:.5px;
+  white-space:nowrap;
+}
+
+/* ═══════════════════════════════════════
+   MINI RANKING (sidebar panel)
+═══════════════════════════════════════ */
+.mini-rank{display:flex;flex-direction:column;gap:6px}
+.mini-rank-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.03);
+  border:1px solid transparent;
+}
+.mini-rank-row.me{
+  background:var(--accent-dim);
+  border-color:rgba(45,212,191,.2);
+}
+.mini-rank-row .pos{
+  font-size:11px;font-weight:700;color:var(--muted);
+  min-width:16px;text-align:center;
+}
+.mini-rank-row.me .pos{color:var(--accent)}
+.mini-rank-row .rname{flex:1;font-size:12px;font-weight:500;color:var(--text)}
+.mini-rank-row .rpts{
+  font-family:'DM Mono',monospace;font-size:12px;
+  font-weight:600;color:var(--accent);
+}
+.mini-rank-row .trend{font-size:10px;margin-left:2px}
+.see-all{
+  font-size:11px;color:var(--accent);text-align:center;
+  padding:8px;border-radius:var(--radius-sm);cursor:pointer;
+  border:1px solid rgba(45,212,191,.15);
+  transition:background .15s;margin-top:2px;
+  font-weight:600;letter-spacing:.3px;
+}
+.see-all:hover{background:var(--accent-dim)}
+
+/* ═══════════════════════════════════════
+   PRONÓSTICOS VIEW
+═══════════════════════════════════════ */
+.filter-strip{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:14px 16px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.filter-label-text{
+  font-size:10px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;
+  white-space:nowrap;margin-right:4px;
+}
+.chip{
+  padding:5px 12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:20px;font-size:12px;font-weight:500;
+  color:var(--muted);cursor:pointer;transition:all .15s;
+  white-space:nowrap;
+}
+.chip:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:var(--border-2)}
+.chip.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(45,212,191,.3)}
+.filter-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+
+.match-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.match-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;
+  display:flex;flex-direction:column;gap:12px;
+  transition:all .2s;
+}
+.match-card:hover{border-color:var(--border-2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.match-card.sin-pred{border-color:rgba(248,113,113,.2)}
+.match-card.exact{border-color:rgba(45,212,191,.3);background:rgba(45,212,191,.04)}
+.match-card.partial{border-color:rgba(251,191,36,.2)}
+
+.mc-top{display:flex;align-items:center;justify-content:space-between}
+.mc-meta{display:flex;align-items:center;gap:6px}
+.mc-fase{
+  font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--accent);
+  background:var(--accent-dim);padding:2px 7px;border-radius:10px;
+  border:1px solid rgba(45,212,191,.2);
+}
+.mc-time{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);font-weight:500;
+}
+.mc-status{
+  font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;padding:3px 8px;border-radius:10px;
+}
+.mc-status.abierto{background:rgba(74,222,128,.1);color:var(--success);border:1px solid rgba(74,222,128,.2)}
+.mc-status.cerrando{background:rgba(251,191,36,.1);color:var(--warn);border:1px solid rgba(251,191,36,.2)}
+.mc-status.cerrado{background:rgba(122,147,184,.08);color:var(--muted);border:1px solid var(--border)}
+.mc-status.jugado{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
+
+.mc-teams{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:10px;align-items:center;
+}
+.mc-team{font-size:13px;font-weight:600;color:var(--text)}
+.mc-team.local{text-align:right}
+.mc-score-wrap{
+  display:flex;gap:4px;align-items:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:8px;padding:6px 8px;
+}
+.mc-score-wrap.exact-bg{background:rgba(45,212,191,.1);border-color:rgba(45,212,191,.3)}
+.mc-score-wrap.partial-bg{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.25)}
+.mc-input{
+  width:38px;height:34px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  border-radius:6px;
+  font-family:'DM Mono',monospace;font-size:16px;font-weight:600;
+  text-align:center;color:var(--text);
+}
+.mc-div{font-family:'DM Mono',monospace;color:var(--muted);font-size:14px}
+.mc-result-display{
+  font-family:'DM Mono',monospace;font-size:20px;font-weight:700;
+  color:var(--text);letter-spacing:2px;
+  padding:4px 14px;background:rgba(255,255,255,.08);
+  border:1px solid var(--border);border-radius:8px;
+}
+
+.mc-bottom{display:flex;align-items:center;justify-content:space-between}
+.mc-deadline{font-size:10px;color:var(--muted)}
+.mc-pts{
+  font-size:11px;font-weight:700;
+  padding:3px 10px;border-radius:10px;
+  background:rgba(45,212,191,.12);color:var(--accent);
+  border:1px solid rgba(45,212,191,.2);
+}
+.mc-pts.full{background:rgba(74,222,128,.12);color:var(--success);border-color:rgba(74,222,128,.2)}
+.mc-pts.partial{background:rgba(251,191,36,.1);color:var(--gold);border-color:rgba(251,191,36,.2)}
+.mc-pts.zero{background:rgba(122,147,184,.08);color:var(--muted);border-color:var(--border)}
+.mc-no-pred{
+  font-size:10px;font-weight:600;color:var(--danger);
+  text-transform:uppercase;letter-spacing:.5px;
+  padding:3px 10px;border-radius:10px;
+  background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);
+}
+
+/* ═══════════════════════════════════════
+   RANKING VIEW
+═══════════════════════════════════════ */
+.podium-row{
+  display:grid;grid-template-columns:1fr 1.15fr 1fr;
+  gap:12px;align-items:end;margin-bottom:4px;
+}
+.podium-card{
+  border-radius:var(--radius);padding:18px 14px;text-align:center;
+  border:1px solid var(--border);background:var(--panel);
+  position:relative;overflow:hidden;
+}
+.podium-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:3px;
+}
+.podium-card.gold::before{background:linear-gradient(90deg,var(--gold),transparent)}
+.podium-card.silver::before{background:linear-gradient(90deg,#c0c0c0,transparent)}
+.podium-card.bronze::before{background:linear-gradient(90deg,#cd7f32,transparent)}
+.podium-card .medal{font-size:28px;margin-bottom:8px}
+.podium-card .pname{font-size:13px;font-weight:600;color:var(--text)}
+.podium-card .parea{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.podium-card .ppts{font-size:26px;font-weight:700;margin-top:10px;font-family:'DM Mono',monospace}
+.podium-card.gold .ppts{color:var(--gold)}
+.podium-card.silver .ppts{color:#c0c0c0}
+.podium-card.bronze .ppts{color:#cd7f32}
+
+.rank-table{display:flex;flex-direction:column;gap:6px}
+.rank-row{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 16px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  transition:border-color .15s;
+}
+.rank-row.me{background:var(--accent-dim);border-color:rgba(45,212,191,.25)}
+.rank-row .rpos{font-size:16px;font-weight:700;color:var(--muted);min-width:24px;text-align:center}
+.rank-row.me .rpos{color:var(--accent)}
+.rank-row .ravatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  color:#07111f;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:11px;
+}
+.rank-row .rinfo{flex:1;min-width:0}
+.rank-row .rname{font-size:13px;font-weight:600;color:var(--text)}
+.rank-row .rarea{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.rank-row .rpts{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent)}
+.rank-row .rdiff{font-size:11px;color:var(--muted);text-align:right}
+.rank-row .rtend{font-size:13px;margin-left:4px}
+
+/* ═══════════════════════════════════════
+   MOBILE NAV (bottom)
+═══════════════════════════════════════ */
+.mobile-nav{display:none}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  :root{--sidebar-w:0px}
+  html,body{overflow:auto}
+  .app{flex-direction:column;height:auto}
+  .sidebar{display:none}
+  .content{padding:16px 14px 80px;overflow:visible}
+  .dash-grid{grid-template-columns:1fr 1fr}
+  .dash-grid-wide{grid-template-columns:1fr}
+  .match-grid{grid-template-columns:1fr}
+  .countdown-card{flex-direction:column;align-items:flex-start}
+  .cd-right{border-left:none;border-top:1px solid var(--border);padding-left:0;padding-top:14px;width:100%}
+  .cd-timer-boxes{justify-content:flex-start}
+  .podium-row{grid-template-columns:1fr}
+  .mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:var(--panel-3);border-top:1px solid var(--border);
+    padding:8px 8px 16px;gap:4px;z-index:100;
+  }
+  .mobile-nav button{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:6px 4px;border-radius:8px;
+    font-size:9px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.5px;
+    transition:all .15s;
+  }
+  .mobile-nav button.active{color:var(--accent)}
+  .mobile-nav button .icon{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">
+          <!--
+            Logo Petromark — 3 capas con colores reales:
+            1) blanco base (rellena el escudo → crea la banda separadora)
+            2) teal exterior con sub-path como hueco (evenodd)
+            3) negro interior con sub-path símbolo V como hueco (evenodd)
+          -->
+          <svg viewBox="0 0 483 516" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(0,516) scale(0.1,-0.1)">
+              <!-- Capa 1: blanco — base del escudo completo -->
+              <path fill="#FFFFFF"
+                d="M2096 5079 c-676 -37 -1328 -223 -1881 -537 -122 -69 -115 -57 -115 -193 0 -553 169 -1282 450 -1944 49 -116 239 -505 300 -615 372 -668 847 -1238 1341 -1610 86 -64 128 -90 148 -90 53 0 275 177 521 415 249 241 432 457 636 750 65 93 274 421 274 430 0 2 22 42 49 89 69 119 219 418 280 559 291 671 445 1294 477 1938 10 194 9 198 -79 252 -153 95 -436 227 -657 305 -425 150 -813 227 -1275 252 -209 11 -250 11 -469 -1z"/>
+              <!-- Capa 2: teal — anillo exterior (evenodd deja hueco hacia el blanco) -->
+              <path fill="#1E6F76" fill-rule="evenodd"
+                d="M2096 5079 c-676 -37 -1328 -223 -1881 -537 -122 -69 -115 -57 -115 -193 0 -553 169 -1282 450 -1944 49 -116 239 -505 300 -615 372 -668 847 -1238 1341 -1610 86 -64 128 -90 148 -90 53 0 275 177 521 415 249 241 432 457 636 750 65 93 274 421 274 430 0 2 22 42 49 89 69 119 219 418 280 559 291 671 445 1294 477 1938 10 194 9 198 -79 252 -153 95 -436 227 -657 305 -425 150 -813 227 -1275 252 -209 11 -250 11 -469 -1z m545 -659 c247 -25 594 -97 799 -167 151 -50 455 -181 475 -203 15 -17 16 -29 6 -127 -16 -150 -48 -347 -78 -478 -14 -60 -31 -138 -38 -171 -7 -34 -31 -117 -53 -185 -188 -587 -454 -1099 -802 -1545 -102 -132 -128 -161 -295 -332 -129 -132 -291 -272 -316 -272 -18 0 -148 108 -269 224 -346 333 -660 788 -901 1306 -103 222 -127 282 -204 516 -105 314 -167 597 -199 904 -17 157 -15 163 60 197 276 124 452 186 691 243 219 51 347 73 563 93 85 9 467 6 561 -3z"/>
+              <!-- Capa 3: negro — escudo interior (evenodd deja símbolo V en blanco) -->
+              <path fill="#111111" fill-rule="evenodd"
+                d="M2004 4099 c-253 -24 -634 -125 -851 -224 -87 -40 -84 -27 -48 -230 35 -200 97 -454 148 -600 47 -136 176 -441 237 -560 34 -66 73 -142 87 -170 62 -122 262 -418 391 -581 133 -168 335 -364 375 -364 39 0 263 227 416 421 80 102 265 378 310 462 15 29 57 108 94 177 193 365 347 817 416 1226 31 177 30 179 -26 208 -71 35 -312 120 -443 154 -147 39 -307 69 -439 82 -118 11 -546 11 -667 -1z m626 -644 c144 -17 280 -41 291 -52 10 -10 -56 -216 -110 -346 -59 -141 -176 -376 -246 -495 -79 -135 -207 -316 -225 -319 -14 -3 -150 191 -233 332 -145 247 -347 715 -347 805 0 26 4 29 48 39 43 9 228 35 312 44 95 10 398 6 510 -8z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <div class="sidebar-brand-name">PRODEMARK</div>
+          <div class="sidebar-brand-sub">Mundial 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showView('dashboard',this)">
+        <span class="icon">📊</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="showView('pronosticos',this)">
+        <span class="icon">⚽</span> Pronósticos
+        <span class="badge-dot"></span>
+      </button>
+      <button class="nav-item" onclick="showView('fixture',this)">
+        <span class="icon">📅</span> Fixture
+      </button>
+      <button class="nav-item" onclick="showView('bonus',this)">
+        <span class="icon">🎯</span> Bonus
+      </button>
+      <button class="nav-item" onclick="showView('ranking',this)">
+        <span class="icon">🏆</span> Ranking
+      </button>
+      <button class="nav-item" onclick="showView('resultados',this)">
+        <span class="icon">📋</span> Resultados
+      </button>
+
+      <div class="sidebar-section-label">Cuenta</div>
+      <button class="nav-item" onclick="showView('perfil',this)">
+        <span class="icon">⚙️</span> Perfil
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar">MC</div>
+        <div class="info">
+          <div class="uname">Migue Cáceres</div>
+          <div class="urole">Jugador · IT</div>
+        </div>
+        <div class="pts-pill">42 pts</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════ CONTENT ══════════ -->
+  <main class="content">
+
+    <!-- ─────────── DASHBOARD ─────────── -->
+    <section class="view active" id="view-dashboard">
+
+      <div>
+        <h1 class="view-title">¡Hola, Migue!</h1>
+        <p class="view-sub">Resumen del prode · Mundial 2026</p>
+      </div>
+
+      <!-- Stats row -->
+      <div class="dash-grid">
+        <div class="stat-card accent">
+          <div class="sc-label">Tus puntos</div>
+          <div class="sc-val">42</div>
+          <div class="sc-desc">3° de 14 jugadores</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="sc-label">Posición</div>
+          <div class="sc-val">#3</div>
+          <div class="sc-desc">↑ subiste 1 puesto</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Pronósticos</div>
+          <div class="sc-val">28</div>
+          <div class="sc-desc">de 32 partidos</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="sc-label">Sin cargar</div>
+          <div class="sc-val">4</div>
+          <div class="urgent-pill">2 cierran hoy</div>
+        </div>
+      </div>
+
+      <!-- Countdown + mini ranking -->
+      <div class="dash-grid-wide">
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Countdown -->
+          <div class="countdown-card">
+            <div class="cd-left">
+              <div class="cd-label">Próximo partido · Hoy</div>
+              <div class="cd-value">03:22:14</div>
+              <div class="cd-info">🇦🇷 Argentina vs 🇨🇮 Costa de Marfil · Grupo B</div>
+            </div>
+            <div class="cd-right">
+              <div class="cd-timer-boxes">
+                <div class="cd-box"><div class="n">03</div><div class="u">hs</div></div>
+                <div class="cd-box"><div class="n">22</div><div class="u">min</div></div>
+                <div class="cd-box"><div class="n">14</div><div class="u">seg</div></div>
+              </div>
+              <div class="cd-match-preview">
+                <span class="flag">🇦🇷</span>
+                <span style="color:var(--text);font-weight:600;font-size:12px">ARG</span>
+                <span class="vs">vs</span>
+                <span style="color:var(--text);font-weight:600;font-size:12px">CIV</span>
+                <span class="flag">🇨🇮</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partidos urgentes hoy -->
+          <div class="card">
+            <div class="card-title"><span class="ct-icon">⚡</span> Pendientes de cargar</div>
+            <div class="urgent-list">
+              <div class="urgent-item sin-pred">
+                <div class="ui-time">20:00</div>
+                <div>
+                  <div class="ui-teams">🇦🇷 Argentina <span class="vs">vs</span> 🇨🇮 Costa de Marfil</div>
+                  <div class="ui-fase">GRUPOS B</div>
+                </div>
+                <div class="ui-pred empty">Sin pronóstico</div>
+                <div class="ui-close">Cierra hoy</div>
+              </div>
+              <div class="urgent-item sin-pred">
+                <div class="ui-time">23:00</div>
+                <div>
+                  <div class="ui-teams">🇧🇷 Brasil <span class="vs">vs</span> 🇷🇸 Serbia</div>
+                  <div class="ui-fase">GRUPOS G</div>
+                </div>
+                <div class="ui-pred empty">Sin pronóstico</div>
+                <div class="ui-close">Cierra hoy</div>
+              </div>
+              <div class="urgent-item">
+                <div class="ui-time">17:00</div>
+                <div>
+                  <div class="ui-teams">🇲🇽 México <span class="vs">vs</span> 🇿🇦 Sudáfrica</div>
+                  <div class="ui-fase">GRUPOS A</div>
+                </div>
+                <div class="ui-pred">2 - 0</div>
+                <div class="ui-close" style="color:var(--muted)">Mañana</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sparkline -->
+          <div class="card">
+            <div class="card-title"><span class="ct-icon">📈</span> Tus puntos por jornada</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 400 60" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sg" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#2dd4bf" stop-opacity=".25"/>
+                    <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- área rellena -->
+                <path d="M0,55 L0,40 L57,32 L114,26 L171,30 L228,18 L285,10 L342,14 L400,6 L400,55 Z" fill="url(#sg)"/>
+                <!-- línea -->
+                <path d="M0,40 L57,32 L114,26 L171,30 L228,18 L285,10 L342,14 L400,6" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- puntos -->
+                <circle cx="0" cy="40" r="3" fill="#2dd4bf"/>
+                <circle cx="57" cy="32" r="3" fill="#2dd4bf"/>
+                <circle cx="114" cy="26" r="3" fill="#2dd4bf"/>
+                <circle cx="171" cy="30" r="3" fill="#2dd4bf"/>
+                <circle cx="228" cy="18" r="3" fill="#2dd4bf"/>
+                <circle cx="285" cy="10" r="3" fill="#2dd4bf"/>
+                <circle cx="342" cy="14" r="3" fill="#2dd4bf"/>
+                <circle cx="400" cy="6" r="4" fill="#2dd4bf" stroke="#0d1d32" stroke-width="2"/>
+              </svg>
+              <div class="spark-label-row">
+                <span>J1</span><span>J2</span><span>J3</span><span>J4</span>
+                <span>J5</span><span>J6</span><span>J7</span>
+                <span style="color:var(--accent);font-weight:600">J8 ↑</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+              <div style="font-size:11px;color:var(--muted)">Mejor jornada: <strong style="color:var(--text)">J5 · 12 pts</strong></div>
+              <div style="font-size:11px;color:var(--muted)">Esta jornada: <strong style="color:var(--accent)">+8 pts</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mini ranking lateral -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-title"><span class="ct-icon">🏆</span> Ranking actual</div>
+            <div class="mini-rank">
+              <div class="mini-rank-row"><span class="pos">1</span><span class="rname">Laura Pérez</span><span class="rpts">52</span><span class="trend">📈</span></div>
+              <div class="mini-rank-row"><span class="pos">2</span><span class="rname">Marcos Vega</span><span class="rpts">48</span><span class="trend" style="color:var(--muted)">→</span></div>
+              <div class="mini-rank-row me"><span class="pos">3</span><span class="rname" style="color:var(--accent)">Migue Cáceres</span><span class="rpts">42</span><span class="trend">📈</span></div>
+              <div class="mini-rank-row"><span class="pos">4</span><span class="rname">Juan Martínez</span><span class="rpts">39</span><span class="trend" style="color:var(--muted)">→</span></div>
+              <div class="mini-rank-row"><span class="pos">5</span><span class="rname">Ana Fernández</span><span class="rpts">35</span><span class="trend" style="color:var(--danger)">📉</span></div>
+            </div>
+            <div class="see-all" onclick="showView('ranking',document.querySelector('[onclick*=ranking]'))">Ver ranking completo →</div>
+          </div>
+
+          <!-- Stats rápidas de rendimiento -->
+          <div class="card">
+            <div class="card-title"><span class="ct-icon">🎯</span> Tu rendimiento</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                <span style="color:var(--muted)">Exactos</span>
+                <span style="color:var(--success);font-weight:700;font-family:'DM Mono',monospace">4 × 5pts</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                <span style="color:var(--muted)">Aciertos parciales</span>
+                <span style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">11 × 2pts</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                <span style="color:var(--muted)">Fallados</span>
+                <span style="color:var(--muted);font-weight:700;font-family:'DM Mono',monospace">13 × 0pts</span>
+              </div>
+              <div style="margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px">
+                  <span>Tasa de acierto</span><span style="color:var(--accent);font-weight:600">53%</span>
+                </div>
+                <!-- barra de progreso -->
+                <div style="height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden">
+                  <div style="height:100%;width:53%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:3px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><span class="ct-icon">⚽</span> Mejor racha</div>
+            <div style="font-size:36px;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;letter-spacing:-1px">3</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">exactos consecutivos</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:8px">🍀 Equipo lucky: <strong style="color:var(--text)">🇦🇷 Argentina</strong></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── PRONÓSTICOS ─────────── -->
+    <section class="view" id="view-pronosticos">
+
+      <div>
+        <h1 class="view-title">Mis Pronósticos</h1>
+        <p class="view-sub">Cargá tus marcadores · Cierre automático a las 00:00 del día del partido</p>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-strip">
+        <span class="filter-label-text">Fase:</span>
+        <span class="chip active">Todos</span>
+        <span class="chip">Grupos</span>
+        <span class="chip">16avos</span>
+        <span class="chip">Octavos</span>
+        <div class="filter-sep"></div>
+        <span class="filter-label-text">Grupo:</span>
+        <span class="chip">A</span>
+        <span class="chip active" style="background:var(--accent-dim);color:var(--accent);border-color:rgba(45,212,191,.3)">B</span>
+        <span class="chip">C</span>
+        <span class="chip">D</span>
+        <span class="chip">E</span>
+        <div class="filter-sep"></div>
+        <span class="filter-label-text">Día:</span>
+        <span class="chip">11 jun</span>
+        <span class="chip active" style="background:var(--accent-dim);color:var(--accent);border-color:rgba(45,212,191,.3)">12 jun</span>
+        <span class="chip">13 jun</span>
+      </div>
+
+      <!-- Grid de partidos -->
+      <div class="match-grid">
+        <!-- abierto con predicción -->
+        <div class="match-card">
+          <div class="mc-top">
+            <div class="mc-meta">
+              <span class="mc-fase">Grupo B</span>
+              <span class="mc-time">12/06 · 20:00</span>
+            </div>
+            <span class="mc-status cerrando">⚠ Cierra en 2h</span>
+          </div>
+          <div class="mc-teams">
+            <div class="mc-team local">🇦🇷 Argentina</div>
+            <div class="mc-score-wrap">
+              <input class="mc-input" value="2" type="number" min="0"/>
+              <span class="mc-div">-</span>
+              <input class="mc-input" value="0" type="number" min="0"/>
+            </div>
+            <div class="mc-team">🇨🇮 Costa de Marfil</div>
+          </div>
+          <div class="mc-bottom">
+            <span class="mc-deadline">Cierra hoy 00:00</span>
+            <span class="mc-pts">Cargado</span>
+          </div>
+        </div>
+
+        <!-- sin predicción - urgente -->
+        <div class="match-card sin-pred">
+          <div class="mc-top">
+            <div class="mc-meta">
+              <span class="mc-fase">Grupo B</span>
+              <span class="mc-time">12/06 · 23:00</span>
+            </div>
+            <span class="mc-status cerrando">⚠ Cierra en 5h</span>
+          </div>
+          <div class="mc-teams">
+            <div class="mc-team local">🇧🇷 Brasil</div>
+            <div class="mc-score-wrap">
+              <input class="mc-input" placeholder="?" type="number" min="0"/>
+              <span class="mc-div">-</span>
+              <input class="mc-input" placeholder="?" type="number" min="0"/>
+            </div>
+            <div class="mc-team">🇷🇸 Serbia</div>
+          </div>
+          <div class="mc-bottom">
+            <span class="mc-deadline">Cierra hoy 00:00</span>
+            <span class="mc-no-pred">Sin cargar</span>
+          </div>
+        </div>
+
+        <!-- jugado exacto -->
+        <div class="match-card exact">
+          <div class="mc-top">
+            <div class="mc-meta">
+              <span class="mc-fase">Grupo C</span>
+              <span class="mc-time">10/06 · 16:00</span>
+            </div>
+            <span class="mc-status jugado">✅ Jugado</span>
+          </div>
+          <div class="mc-teams">
+            <div class="mc-team local">🇫🇷 Francia</div>
+            <div class="mc-result-display">2 - 1</div>
+            <div class="mc-team">🇩🇪 Alemania</div>
+          </div>
+          <div class="mc-bottom">
+            <span class="mc-deadline">Tu pronóstico: 2-1</span>
+            <span class="mc-pts full">🎯 5 pts exacto</span>
+          </div>
+        </div>
+
+        <!-- jugado parcial -->
+        <div class="match-card partial">
+          <div class="mc-top">
+            <div class="mc-meta">
+              <span class="mc-fase">Grupo A</span>
+              <span class="mc-time">11/06 · 17:00</span>
+            </div>
+            <span class="mc-status jugado">✅ Jugado</span>
+          </div>
+          <div class="mc-teams">
+            <div class="mc-team local">🇲🇽 México</div>
+            <div class="mc-result-display">1 - 0</div>
+            <div class="mc-team">🇿🇦 Sudáfrica</div>
+          </div>
+          <div class="mc-bottom">
+            <span class="mc-deadline">Tu pronóstico: 2-0</span>
+            <span class="mc-pts partial">🔍 2 pts</span>
+          </div>
+        </div>
+
+        <!-- abierto sin cargar aún -->
+        <div class="match-card">
+          <div class="mc-top">
+            <div class="mc-meta">
+              <span class="mc-fase">Grupo B</span>
+              <span class="mc-time">15/06 · 18:00</span>
+            </div>
+            <span class="mc-status abierto">🟢 Abierto</span>
+          </div>
+          <div class="mc-teams">
+            <div class="mc-team local">🇵🇹 Portugal</div>
+            <div class="mc-score-wrap">
+              <input class="mc-input" type="number" min="0"/>
+              <span class="mc-div">-</span>
+              <input class="mc-input" type="number" min="0"/>
+            </div>
+            <div class="mc-team">🇺🇾 Uruguay</div>
+          </div>
+          <div class="mc-bottom">
+            <span class="mc-deadline">Cierra 15/06 00:00</span>
+            <span class="mc-no-pred" style="background:transparent;border:none;color:var(--muted)">Sin cargar</span>
+          </div>
+        </div>
+
+        <!-- fallado -->
+        <div class="match-card">
+          <div class="mc-top">
+            <div class="mc-meta">
+              <span class="mc-fase">Grupo D</span>
+              <span class="mc-time">09/06 · 14:00</span>
+            </div>
+            <span class="mc-status jugado">✅ Jugado</span>
+          </div>
+          <div class="mc-teams">
+            <div class="mc-team local">🇪🇸 España</div>
+            <div class="mc-result-display">0 - 0</div>
+            <div class="mc-team">🇭🇷 Croacia</div>
+          </div>
+          <div class="mc-bottom">
+            <span class="mc-deadline">Tu pronóstico: 2-1</span>
+            <span class="mc-pts zero">❌ 0 pts</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ─────────── RANKING ─────────── -->
+    <section class="view" id="view-ranking">
+      <div>
+        <h1 class="view-title">Ranking</h1>
+        <p class="view-sub">14 jugadores · actualizado en tiempo real</p>
+      </div>
+
+      <div class="podium-row">
+        <div class="podium-card silver" style="order:1">
+          <div class="medal">🥈</div>
+          <div class="pname">Marcos Vega</div>
+          <div class="parea">Operaciones</div>
+          <div class="ppts">48</div>
+        </div>
+        <div class="podium-card gold" style="order:2;padding:24px 14px">
+          <div class="medal">🥇</div>
+          <div class="pname">Laura Pérez</div>
+          <div class="parea">Comercial</div>
+          <div class="ppts">52</div>
+        </div>
+        <div class="podium-card bronze" style="order:3">
+          <div class="medal">🥉</div>
+          <div class="pname">Migue Cáceres</div>
+          <div class="parea">IT</div>
+          <div class="ppts">42</div>
+        </div>
+      </div>
+
+      <div class="rank-table">
+        <div class="rank-row me">
+          <div class="rpos">3</div>
+          <div class="ravatar">MC</div>
+          <div class="rinfo">
+            <div class="rname">Migue Cáceres <span style="font-size:10px;color:var(--accent)">(vos)</span></div>
+            <div class="rarea">IT</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rpts">42</div>
+            <div class="rdiff" style="color:var(--success)">+8 esta jornada 📈</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rpos">4</div>
+          <div class="ravatar" style="background:linear-gradient(135deg,#7a93b8,#4a5568)">JM</div>
+          <div class="rinfo">
+            <div class="rname">Juan Martínez</div>
+            <div class="rarea">Operaciones</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rpts">39</div>
+            <div class="rdiff">-3 pts del 3°</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rpos">5</div>
+          <div class="ravatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">AF</div>
+          <div class="rinfo">
+            <div class="rname">Ana Fernández</div>
+            <div class="rarea">Administración</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rpts">35</div>
+            <div class="rdiff" style="color:var(--danger)">-4 esta jornada 📉</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rpos">6</div>
+          <div class="ravatar" style="background:linear-gradient(135deg,#fb923c,#ea580c)">RG</div>
+          <div class="rinfo">
+            <div class="rname">Rodrigo García</div>
+            <div class="rarea">Operaciones</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rpts">31</div>
+            <div class="rdiff">→ sin cambio</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── VISTAS STUB ─────────── -->
+    <section class="view" id="view-fixture">
+      <div><h1 class="view-title">Fixture</h1><p class="view-sub">Lista · Posiciones · Eliminatorias</p></div>
+      <div class="card" style="padding:40px;text-align:center;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">📅</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text)">Vista en construcción</div>
+        <div style="font-size:13px;margin-top:6px">Se implementa en el paso de features v3</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-bonus">
+      <div><h1 class="view-title">Bonus Mini-Prode</h1><p class="view-sub">Campeón + 2 finalistas · hasta 40 pts extra</p></div>
+      <div class="card" style="padding:40px;text-align:center;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">🎯</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text)">Vista en construcción</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-resultados">
+      <div><h1 class="view-title">Resultados</h1><p class="view-sub">Tu historial de pronósticos vs resultados reales</p></div>
+      <div class="card" style="padding:40px;text-align:center;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">📋</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text)">Vista en construcción</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-perfil">
+      <div><h1 class="view-title">Mi Perfil</h1><p class="view-sub">Datos de cuenta y seguridad</p></div>
+      <div class="card" style="padding:40px;text-align:center;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">⚙️</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text)">Vista en construcción</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══════════ MOBILE NAV ══════════ -->
+<div class="mobile-nav">
+  <button class="active" onclick="showView('dashboard',this)">
+    <span class="icon">📊</span>Dashboard
+  </button>
+  <button onclick="showView('pronosticos',this)">
+    <span class="icon">⚽</span>Pronos
+  </button>
+  <button onclick="showView('fixture',this)">
+    <span class="icon">📅</span>Fixture
+  </button>
+  <button onclick="showView('ranking',this)">
+    <span class="icon">🏆</span>Ranking
+  </button>
+  <button onclick="showView('perfil',this)">
+    <span class="icon">⚙️</span>Perfil
+  </button>
+</div>
+
+<script>
+function showView(name, triggerEl) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + name);
+  if(target) target.classList.add('active');
+
+  // sidebar nav
+  document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
+  // mobile nav
+  document.querySelectorAll('.mobile-nav button').forEach(el => el.classList.remove('active'));
+
+  if(triggerEl) {
+    triggerEl.classList.add('active');
+    // Si es sidebar item, marcar también el mobile
+    const mobileBtn = document.querySelector(`.mobile-nav button[onclick*="${name}"]`);
+    if(mobileBtn) mobileBtn.classList.add('active');
+  }
+
+  // Scroll al top del content
+  document.querySelector('.content').scrollTop = 0;
+}
+
+// Countdown tick
+function tickCountdown() {
+  const el = document.querySelector('.cd-value');
+  const boxes = document.querySelectorAll('.cd-box .n');
+  if(!el || boxes.length < 3) return;
+  let [h,m,s] = el.textContent.split(':').map(Number);
+  if(s > 0) s--;
+  else { s = 59; if(m > 0) m--; else { m = 59; if(h > 0) h--; } }
+  el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  if(boxes.length >= 3) {
+    boxes[0].textContent = String(h).padStart(2,'0');
+    boxes[1].textContent = String(m).padStart(2,'0');
+    boxes[2].textContent = String(s).padStart(2,'0');
+  }
+}
+setInterval(tickCountdown, 1000);
+</script>
+</body>
+</html>
