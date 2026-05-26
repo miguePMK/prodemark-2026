@@ -126,3 +126,41 @@ Recomendación práctica: mantener la app accesible solo internamente (link comp
 ## 📝 Licencia / Crédito
 
 Proyecto interno de Petromark SRL. Hecho para uso del grupo, no comercial.
+
+## 🗂 Estructura de CARPETAS
+
+```
+prodemark-2026/
+│
+├── index.html                  ← ~80 líneas: solo estructura HTML + modales
+│
+├── css/
+│   ├── tokens.css              ← variables :root (paleta, radios, sombras)
+│   ├── base.css                ← reset, body, tipografía
+│   ├── layout.css              ← sidebar, content area, app shell, responsive
+│   ├── components.css          ← botones, inputs, cards, modals, badges, toast
+│   └── views.css               ← estilos específicos: match cards, ranking, fixture...
+│
+├── js/
+│   ├── config.js               ← firebaseConfig, SALT, FASE_LABELS, constantes
+│   ├── state.js                ← objeto global compartido (allUsers, allMatches, etc.)
+│   ├── firebase.js             ← init Firebase + exporta db, usersRef, matchesRef...
+│   ├── helpers.js              ← funciones puras: hashPin, fmtDate, calcPoints, getMatchStatus...
+│   ├── auth.js                 ← bootstrap, login, logout, changePin
+│   ├── app.js                  ← init(), postLoginSetup(), navigate(), renderView()
+│   │
+│   └── views/
+│       ├── dashboard.js
+│       ├── pronosticos.js      ← renderPronosticos, renderMatchCard, savePrediction
+│       ├── fixture.js          ← (v3) lista + posiciones + bracket
+│       ├── ranking.js
+│       ├── resultados.js
+│       ├── especiales.js       ← jugador + admin bonus
+│       ├── perfil.js
+│       └── admin/
+│           ├── users.js
+│           ├── partidos.js     ← ABM, import/export CSV, resultado modal
+│           └── puntos.js       ← recalculate helpers
+│
+└── partidos_mundial_2026.csv
+```
