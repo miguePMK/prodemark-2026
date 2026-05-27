@@ -60,34 +60,49 @@ export function renderMatchCard(id,m){
   const visVal=pred.visitante!=null?pred.visitante:"";
   const hasPred=pred.local!=null&&pred.visitante!=null;
 
-  let scoreHtml;
+  let centerHtml, statusBlock;
+
   if(m.jugado){
     const pts=calcPoints(pred,m);
     const cls=pts===5?"exact":pts===2?"partial":"miss";
-    scoreHtml=`<div class="score-input-group ${cls}">
-      <input class="score-input" type="text" value="${localVal}" disabled/>
-      <span class="score-divider">-</span>
-      <input class="score-input" type="text" value="${visVal}" disabled/>
+    const clsColor=pts===5?"var(--success)":pts===2?"var(--gold)":"var(--muted)";
+    const clsBg=pts===5?"var(--success-dim)":pts===2?"var(--gold-dim)":"rgba(255,255,255,.04)";
+    const clsBorder=pts===5?"var(--success-border)":pts===2?"var(--gold-border)":"var(--border)";
+    const icon=pts===5?"🎯":pts===2?"🔍":"❌";
+
+    // Centro: pronóstico del usuario
+    centerHtml=hasPred
+      ?`<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;font-weight:600;color:${clsColor};text-transform:uppercase;letter-spacing:.5px">${icon} Tu prono</div>
+          <div style="background:${clsBg};border:1px solid ${clsBorder};border-radius:var(--radius-xs);padding:4px 12px;font-family:'DM Mono',monospace;font-weight:700;font-size:18px;color:${clsColor}">${localVal}&ndash;${visVal}</div>
+        </div>`
+      :`<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Sin prono</div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius-xs);padding:4px 12px;font-family:'DM Mono',monospace;font-weight:700;font-size:18px;color:var(--muted)">?&ndash;?</div>
+        </div>`;
+
+    // Derecha: resultado oficial
+    statusBlock=`<div class="match-status">
+      <div style="text-align:right">
+        <div style="font-size:9px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Resultado</div>
+        <div class="result-display">${m.resultado_local}-${m.resultado_visitante}</div>
+      </div>
+      ${pts!=null
+        ?`<span class="pts-badge${pts===5?" full":pts===0?" zero":""}">${pts} PTS</span>`
+        :`<span class="deadline-info" style="font-size:10px">—</span>`}
+      ${isClosedOrPlayed(status)?`<button class="social-btn" onclick="openMatchPredictionsModal('${id}')">👥 Pronos</button>`:""}
     </div>`;
+
   }else{
-    scoreHtml=`<div class="score-input-group">
+    // Partido no jugado: inputs editables
+    centerHtml=`<div class="score-input-group">
       <input class="score-input" type="number" min="0" max="20" value="${localVal}" ${editable?"":"disabled"}
         onfocus="this.select()" onchange="savePrediction('${id}','local',this.value)"/>
       <span class="score-divider">-</span>
       <input class="score-input" type="number" min="0" max="20" value="${visVal}" ${editable?"":"disabled"}
         onfocus="this.select()" onchange="savePrediction('${id}','visitante',this.value)"/>
     </div>`;
-  }
 
-  let statusBlock;
-  if(m.jugado){
-    const pts=calcPoints(pred,m);
-    statusBlock=`<div class="match-status">
-      <div class="result-display">${m.resultado_local}-${m.resultado_visitante}</div>
-      ${pts!=null?`<span class="pts-badge${pts===5?" full":pts===0?" zero":""}">${pts===5?"🎯":pts===2?"🔍":"❌"} ${pts} PTS</span>`:`<span class="deadline-info">No jugaste</span>`}
-      ${isClosedOrPlayed(status)?`<button class="social-btn" onclick="openMatchPredictionsModal('${id}')">👥 Pronos</button>`:""}
-    </div>`;
-  }else{
     const deadline=new Date(m.deadline_iso);
     let dlInfo="";
     if(status==="abierto") dlInfo=`Cierra ${fmtDateShort(deadline.toISOString())} -1h`;
@@ -108,7 +123,7 @@ export function renderMatchCard(id,m){
     </div>
     <div class="match-teams">
       <div class="team local">${m.local||'<span class="tba">TBD</span>'}</div>
-      ${m.jugado?`<div class="result-display">${m.resultado_local}-${m.resultado_visitante}</div>`:scoreHtml}
+      ${centerHtml}
       <div class="team visitante">${m.visitante||'<span class="tba">TBD</span>'}</div>
     </div>
     ${statusBlock}
