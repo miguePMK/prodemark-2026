@@ -272,9 +272,6 @@ const matchesRef       = db.ref("matches");
 const predictionsRef   = db.ref("predictions");
 const specialConfigRef = db.ref("special_config");
 const specialPredsRef  = db.ref("special_predictions");
-matchesRef.keepSynced(true);
-predictionsRef.keepSynced(true);
-specialPredsRef.keepSynced(true);
 
 // ════════════ CONSTANTS ════════════
 const SALT          = "PMK_PRODEMARK_2026_v1_salt";
