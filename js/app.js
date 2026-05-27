@@ -14,7 +14,7 @@ import { renderResultados } from './views/resultados.js';
 import { renderEspeciales, saveSpecial, renderAdminEspeciales, toggleSpecialEnabled, saveSpecialResults, clearSpecialResults } from './views/especiales.js';
 import { renderPerfil, openChangePinModal, changePin } from './views/perfil.js';
 import { renderAdminUsers, openCreateUserModal, openEditUserModal, saveUser, resetUserPin, deleteUser } from './views/admin/users.js';
-import { renderAdminPartidos, openCargasModal, setManualStatus, openCreateMatchModal, openEditMatchModal, saveMatch, deleteMatch, deleteAllMatches, openResultadoModal, saveResult, clearResult, recalcularDeadlines, exportMatchesCSV, importMatchesCSV, getCargasCount } from './views/admin/partidos.js';
+import { renderAdminPartidos, openCargasModal, setManualStatus, openCreateMatchModal, openEditMatchModal, saveMatch, deleteMatch, deleteAllMatches, openResultadoModal, saveResult, clearResult, recalcularDeadlines, exportMatchesCSV, importMatchesCSV, getCargasCount, openPasteMatchesModal, previewPaste, confirmPaste, openBulkResultsModal, saveBulkResults } from './views/admin/partidos.js';
 import { recalculateAllUserPoints, recalculatePointsForMatch } from './views/admin/puntos.js';
 
 // ════════════ CONFETTI ════════════
@@ -116,6 +116,8 @@ Object.assign(window,{
   openCreateMatchModal, openEditMatchModal, saveMatch, deleteMatch, deleteAllMatches,
   openResultadoModal, saveResult, clearResult, recalcularDeadlines,
   openCargasModal, setManualStatus, exportMatchesCSV, importMatchesCSV,
+  openPasteMatchesModal, previewPaste, confirmPaste,
+  openBulkResultsModal, saveBulkResults,
   // admin puntos
   recalculateAllUserPoints,
 });

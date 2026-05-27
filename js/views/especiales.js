@@ -126,8 +126,11 @@ export function renderAdminEspeciales(){
 
 export async function toggleSpecialEnabled(){
   if(state.specialConfig.campeon_real) return showToast("⚠️ Bonus ya resuelto");
-  try{await specialConfigRef.update({enabled:!state.specialConfig.enabled});showToast(state.specialConfig.enabled?"🔒 Bonus deshabilitado":"🟢 Bonus habilitado")}
-  catch(err){console.error(err);showToast("❌ Error")}
+  const enabling=!state.specialConfig.enabled;
+  try{
+    await specialConfigRef.update({enabled:enabling});
+    showToast(enabling?"🟢 Bonus habilitado":"🔒 Bonus deshabilitado");
+  }catch(err){console.error(err);showToast("❌ Error")}
 }
 export async function saveSpecialResults(){
   const campeon=document.getElementById("adminCampeon").value.trim();

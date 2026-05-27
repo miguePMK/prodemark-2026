@@ -23,8 +23,9 @@ export function renderAdminPartidos(){
         <div><h1 class="view-title">Partidos</h1><p class="view-sub">${matches.length} partido${matches.length!==1?"s":""}</p></div>
         <div class="action-row">
           <button class="btn btn-primary btn-sm" onclick="openCreateMatchModal()">➕ Nuevo</button>
-          <label class="btn btn-secondary btn-sm" style="cursor:pointer">⬆ CSV<input type="file" accept=".csv" style="display:none" onchange="importMatchesCSV(event)"/></label>
+          <button class="btn btn-secondary btn-sm" onclick="openPasteMatchesModal()">📋 Pegar tabla</button>
           <button class="btn btn-secondary btn-sm" onclick="exportMatchesCSV()">⬇ CSV</button>
+          ${matches.length>0?`<button class="btn btn-orange btn-sm" onclick="openBulkResultsModal()">🎯 Resultados en masa</button>`:""}
           ${matches.length>0?`<button class="btn btn-gray btn-sm" onclick="recalcularDeadlines()" title="Actualizar deadlines al criterio actual (1h antes del kick-off)">🕐 Deadlines</button>`:""}
           ${matches.length>0?`<button class="btn btn-danger btn-sm" onclick="deleteAllMatches()">🗑 Borrar todos</button>`:""}
         </div>
@@ -197,6 +198,158 @@ export async function clearResult(){
     }
     await recalculateAllUserPoints();closeModal("modalResult");showToast("✅ Resultado borrado");
   }catch(err){console.error(err);showToast("❌ Error")}
+}
+
+// ════════════ PEGAR TABLA ════════════
+export function openPasteMatchesModal(){
+  const existing=document.getElementById("modalPaste");if(existing)existing.remove();
+  const div=document.createElement("div");div.id="modalPaste";div.className="overlay";
+  div.innerHTML=`<div class="modal wide">
+    <div class="modal-header"><h3>📋 Pegar tabla de partidos</h3><button class="modal-close" onclick="closeModal('modalPaste')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+        Copiá desde Google Sheets o Excel y pegá acá. Columnas en orden:<br/>
+        <strong style="color:var(--accent)">fase · grupo · fecha (YYYY-MM-DD) · hora (HH:MM) · local · visitante</strong><br/>
+        Podés omitir grupo dejando la celda vacía. Seleccioná el encabezado si lo tenés.
+      </p>
+      <textarea id="pasteArea" style="width:100%;height:200px;background:var(--panel-2);border:1px solid var(--border-2);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:10px;resize:vertical"
+        placeholder="fase&#9;grupo&#9;fecha&#9;hora&#9;local&#9;visitante&#10;grupos&#9;A&#9;2026-06-11&#9;16:00&#9;🇲🇽 México&#9;🇿🇦 Sudáfrica&#10;grupos&#9;&#9;2026-06-12&#9;13:00&#9;🇺🇸 EE.UU.&#9;🇸🇷 Surinam"></textarea>
+      <div id="pastePreview" style="margin-top:12px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-gray btn-sm" onclick="closeModal('modalPaste')">Cancelar</button>
+      <button class="btn btn-secondary btn-sm" onclick="previewPaste()">👁 Vista previa</button>
+      <button class="btn btn-primary btn-sm" id="btnConfirmPaste" style="display:none" onclick="confirmPaste()">✅ Importar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(div);div.classList.add("open");
+  div.addEventListener("click",e=>{if(e.target===div)closeModal("modalPaste")});
+}
+
+let _parsedPaste=[];
+
+export function previewPaste(){
+  const raw=document.getElementById("pasteArea").value.trim();
+  if(!raw){document.getElementById("pastePreview").innerHTML=`<p style="color:var(--muted);font-size:12px">Pegá datos primero.</p>`;return}
+  const lines=raw.split(/\r?\n/).filter(l=>l.trim());
+  const FASE_VALID=["grupos","16avos","octavos","cuartos","semi","tercer","final"];
+  _parsedPaste=[];
+  const errors=[];
+  lines.forEach((line,i)=>{
+    const cols=line.split(/\t|,/).map(c=>c.trim().replace(/^"|"$/g,"").trim());
+    // Intentar detectar fila de encabezado
+    if(i===0&&(cols[0].toLowerCase()==="fase"||cols[0].toLowerCase()==="phase")) return;
+    const[fase="grupos",grupo="",fecha="",hora="16:00",local="",visitante=""]=cols;
+    if(!fecha||!local||!visitante){errors.push(`Fila ${i+1}: faltan datos`);return}
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(fecha)){errors.push(`Fila ${i+1}: fecha inválida (use YYYY-MM-DD)`);return}
+    const faseNorm=fase.toLowerCase()||"grupos";
+    _parsedPaste.push({fase:faseNorm,grupo:grupo||null,fecha,hora:hora||"16:00",local,visitante});
+  });
+  const preview=document.getElementById("pastePreview");
+  if(_parsedPaste.length===0){
+    preview.innerHTML=`<p style="color:var(--danger);font-size:12px">No se encontraron filas válidas.${errors.length?`<br/>${errors.slice(0,3).join("<br/>")}`:""}</p>`;
+    document.getElementById("btnConfirmPaste").style.display="none";return;
+  }
+  const {FASE_SHORT}=window._config||{};
+  preview.innerHTML=`
+    <p style="font-size:12px;color:var(--success);margin-bottom:8px">✅ ${_parsedPaste.length} partido${_parsedPaste.length>1?"s":""} listos para importar${errors.length?` · ⚠️ ${errors.length} fila${errors.length>1?"s":""} con error`:""}</p>
+    <div class="table-wrap" style="max-height:200px;overflow-y:auto"><table class="admin-table" style="font-size:11px">
+      <thead><tr><th>Fase</th><th>Grupo</th><th>Fecha</th><th>Hora</th><th>Local</th><th>Visitante</th></tr></thead>
+      <tbody>${_parsedPaste.map(m=>`<tr>
+        <td>${m.fase}</td><td>${m.grupo||"—"}</td><td>${m.fecha}</td><td>${m.hora}</td>
+        <td>${m.local}</td><td>${m.visitante}</td>
+      </tr>`).join("")}</tbody>
+    </table></div>`;
+  document.getElementById("btnConfirmPaste").style.display="";
+}
+
+export async function confirmPaste(){
+  if(!_parsedPaste.length) return;
+  if(!confirm(`¿Importar ${_parsedPaste.length} partido${_parsedPaste.length>1?"s":""} a Firebase?`)) return;
+  const newMatches={};let i=0;
+  for(const m of _parsedPaste){
+    const fechaIso=`${m.fecha}T${m.hora}:00-03:00`;
+    newMatches[`m_${Date.now()}_${i}`]={fase:m.fase,grupo:m.grupo,fecha_iso:fechaIso,deadline_iso:computeDeadline(fechaIso),local:m.local,visitante:m.visitante,jugado:false};
+    i++;await new Promise(r=>setTimeout(r,1));
+  }
+  try{
+    await matchesRef.update(newMatches);
+    closeModal("modalPaste");
+    showToast(`✅ ${_parsedPaste.length} partidos importados`);
+    _parsedPaste=[];
+  }catch(err){console.error(err);showToast("❌ Error al importar")}
+}
+
+// ════════════ RESULTADOS EN MASA ════════════
+export function openBulkResultsModal(){
+  const pending=Object.entries(state.allMatches)
+    .filter(([,m])=>!m.jugado)
+    .sort((a,b)=>new Date(a[1].fecha_iso)-new Date(b[1].fecha_iso));
+  if(pending.length===0){showToast("⚠️ Todos los partidos ya tienen resultado");return}
+
+  const existing=document.getElementById("modalBulkResults");if(existing)existing.remove();
+  const div=document.createElement("div");div.id="modalBulkResults";div.className="overlay";
+  div.innerHTML=`<div class="modal wide">
+    <div class="modal-header purple"><h3>🎯 Resultados en masa</h3><button class="modal-close" onclick="closeModal('modalBulkResults')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">
+        Completá los resultados que quieras guardar. Los campos vacíos se ignoran. Al guardar se recalculan los puntos automáticamente.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:6px" id="bulkList">
+        ${pending.map(([id,m])=>`
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius-sm)" id="bulk_${id}">
+            <div style="text-align:right;min-width:80px;font-size:12px;color:var(--muted);line-height:1.3">
+              <div style="font-weight:600;color:var(--text)">${fmtDateShort(m.fecha_iso)}</div>
+              <div>${fmtTime(m.fecha_iso)}</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto auto auto 1fr;gap:8px;align-items:center">
+              <div style="text-align:right;font-size:13px;font-weight:500">${m.local}</div>
+              <input class="score-input bulk-score" id="bulk_local_${id}" type="number" min="0" max="30" placeholder="—" style="width:46px;height:40px;font-size:18px" onfocus="this.select()"/>
+              <span style="font-family:'DM Mono',monospace;color:var(--muted)">:</span>
+              <input class="score-input bulk-score" id="bulk_vis_${id}" type="number" min="0" max="30" placeholder="—" style="width:46px;height:40px;font-size:18px" onfocus="this.select()"/>
+              <div style="font-size:13px;font-weight:500">${m.visitante}</div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);text-align:right;white-space:nowrap">
+              <span style="font-size:9px;text-transform:uppercase;letter-spacing:.5px">${(m.fase||"").toUpperCase()}${m.grupo?` ${m.grupo}`:""}</span>
+            </div>
+          </div>`).join("")}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-gray btn-sm" onclick="closeModal('modalBulkResults')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="saveBulkResults()">💾 Guardar resultados</button>
+    </div>
+  </div>`;
+  document.body.appendChild(div);div.classList.add("open");
+  div.addEventListener("click",e=>{if(e.target===div)closeModal("modalBulkResults")});
+
+  // Enter para pasar al siguiente input
+  const inputs=[...div.querySelectorAll(".bulk-score")];
+  inputs.forEach((inp,i)=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&inputs[i+1]){e.preventDefault();inputs[i+1].focus()}})});
+}
+
+export async function saveBulkResults(){
+  const pending=Object.entries(state.allMatches).filter(([,m])=>!m.jugado);
+  const toSave=[];
+  pending.forEach(([id])=>{
+    const lEl=document.getElementById(`bulk_local_${id}`);
+    const vEl=document.getElementById(`bulk_vis_${id}`);
+    if(!lEl||!vEl) return;
+    const l=parseInt(lEl.value),v=parseInt(vEl.value);
+    if(isNaN(l)||isNaN(v)||l<0||v<0||l>30||v>30) return;
+    toSave.push({id,l,v,match:state.allMatches[id]});
+  });
+  if(toSave.length===0) return showToast("⚠️ No hay resultados para guardar");
+  if(!confirm(`¿Guardar ${toSave.length} resultado${toSave.length>1?"s":""} y recalcular puntos?`)) return;
+
+  try{
+    for(const{id,l,v,match} of toSave){
+      await matchesRef.child(id).update({jugado:true,resultado_local:l,resultado_visitante:v});
+      await recalculatePointsForMatch(id,{...match,jugado:true,resultado_local:l,resultado_visitante:v});
+    }
+    closeModal("modalBulkResults");
+    showToast(`✅ ${toSave.length} resultado${toSave.length>1?"s":""} guardados`);
+  }catch(err){console.error(err);showToast("❌ Error al guardar")}
 }
 
 // CSV
