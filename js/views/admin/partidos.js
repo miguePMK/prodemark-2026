@@ -26,6 +26,7 @@ export function renderAdminPartidos(){
           <button class="btn btn-secondary btn-sm" onclick="openPasteMatchesModal()">📋 Pegar tabla</button>
           <button class="btn btn-secondary btn-sm" onclick="exportMatchesCSV()">⬇ CSV</button>
           ${matches.length>0?`<button class="btn btn-orange btn-sm" onclick="openBulkResultsModal()">🎯 Resultados en masa</button>`:""}
+          <button class="btn btn-purple btn-sm" onclick="inicializarEliminatorias()">🏆 Inicializar eliminatorias</button>
           ${matches.length>0?`<button class="btn btn-gray btn-sm" onclick="recalcularDeadlines()" title="Actualizar deadlines al criterio actual (1h antes del kick-off)">🕐 Deadlines</button>`:""}
           ${matches.length>0?`<button class="btn btn-danger btn-sm" onclick="deleteAllMatches()">🗑 Borrar todos</button>`:""}
         </div>
@@ -198,6 +199,76 @@ export async function clearResult(){
     }
     await recalculateAllUserPoints();closeModal("modalResult");showToast("✅ Resultado borrado");
   }catch(err){console.error(err);showToast("❌ Error")}
+}
+
+// ════════════ INICIALIZAR ELIMINATORIAS ════════════
+// Tiempos en ART (UTC-3). Fuente: FIFA oficial (EDT+1h)
+const ELIM_2026 = [
+  // ── 16avos de final (Jun 28 – Jul 3) ─────────────
+  {fase:"16avos",fecha:"2026-06-28",hora:"16:00"}, // x1
+  {fase:"16avos",fecha:"2026-06-29",hora:"14:00"}, // x3
+  {fase:"16avos",fecha:"2026-06-29",hora:"17:00"},
+  {fase:"16avos",fecha:"2026-06-29",hora:"22:00"},
+  {fase:"16avos",fecha:"2026-06-30",hora:"14:00"}, // x3
+  {fase:"16avos",fecha:"2026-06-30",hora:"18:00"},
+  {fase:"16avos",fecha:"2026-06-30",hora:"22:00"},
+  {fase:"16avos",fecha:"2026-07-01",hora:"13:00"}, // x3
+  {fase:"16avos",fecha:"2026-07-01",hora:"17:00"},
+  {fase:"16avos",fecha:"2026-07-01",hora:"21:00"},
+  {fase:"16avos",fecha:"2026-07-02",hora:"16:00"}, // x3
+  {fase:"16avos",fecha:"2026-07-02",hora:"20:00"},
+  {fase:"16avos",fecha:"2026-07-02",hora:"22:00"},
+  {fase:"16avos",fecha:"2026-07-03",hora:"15:00"}, // x3
+  {fase:"16avos",fecha:"2026-07-03",hora:"19:00"},
+  {fase:"16avos",fecha:"2026-07-03",hora:"22:00"},
+  // ── Octavos de final (Jul 4 – Jul 7) ─────────────
+  {fase:"octavos",fecha:"2026-07-04",hora:"16:00"},
+  {fase:"octavos",fecha:"2026-07-04",hora:"20:00"},
+  {fase:"octavos",fecha:"2026-07-05",hora:"16:00"},
+  {fase:"octavos",fecha:"2026-07-05",hora:"20:00"},
+  {fase:"octavos",fecha:"2026-07-06",hora:"16:00"},
+  {fase:"octavos",fecha:"2026-07-06",hora:"20:00"},
+  {fase:"octavos",fecha:"2026-07-07",hora:"16:00"},
+  {fase:"octavos",fecha:"2026-07-07",hora:"20:00"},
+  // ── Cuartos de final (Jul 9 – Jul 11) ────────────
+  {fase:"cuartos",fecha:"2026-07-09",hora:"16:00"},
+  {fase:"cuartos",fecha:"2026-07-09",hora:"20:00"},
+  {fase:"cuartos",fecha:"2026-07-10",hora:"20:00"},
+  {fase:"cuartos",fecha:"2026-07-11",hora:"16:00"},
+  // ── Semifinales (Jul 14 – Jul 15) ────────────────
+  {fase:"semi",fecha:"2026-07-14",hora:"18:00"}, // Dallas
+  {fase:"semi",fecha:"2026-07-15",hora:"18:00"}, // Atlanta
+  // ── Tercer puesto (Jul 18) ────────────────────────
+  {fase:"tercer",fecha:"2026-07-18",hora:"16:00"}, // Miami
+  // ── Final (Jul 19) ────────────────────────────────
+  {fase:"final",fecha:"2026-07-19",hora:"19:00"}, // MetLife, Nueva Jersey
+];
+
+export async function inicializarEliminatorias(){
+  // Verificar si ya hay partidos de eliminatorias
+  const yaExisten=Object.values(state.allMatches).filter(m=>m.fase!=="grupos");
+  if(yaExisten.length>0){
+    if(!confirm(`Ya existen ${yaExisten.length} partido${yaExisten.length>1?"s":""} de eliminatorias en Firebase.\n¿Agregar los que faltan igualmente?\n(Los existentes no se tocan)`)) return;
+  } else {
+    if(!confirm(`Crear los 32 partidos de la fase eliminatoria con fechas y horas oficiales del Mundial 2026.\nTodos los equipos quedan como "TBD" para editar cuando se definan los cruces.\n\n¿Continuar?`)) return;
+  }
+
+  const nuevos={};
+  let i=0;
+  for(const m of ELIM_2026){
+    const fechaIso=`${m.fecha}T${m.hora}:00-03:00`;
+    nuevos[`m_elim_${m.fecha.replace(/-/g,"")}_${m.hora.replace(":","")}_${i}`]={
+      fase:m.fase, grupo:null,
+      fecha_iso:fechaIso, deadline_iso:computeDeadline(fechaIso),
+      local:"TBD", visitante:"TBD", jugado:false
+    };
+    i++;
+  }
+
+  try{
+    await matchesRef.update(nuevos);
+    showToast(`✅ ${ELIM_2026.length} partidos de eliminatorias creados · Editá los cruces cuando se definan`);
+  }catch(err){console.error(err);showToast("❌ Error al crear")}
 }
 
 // ════════════ PEGAR TABLA ════════════
