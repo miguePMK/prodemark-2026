@@ -49,6 +49,11 @@ export function renderPerfil(){
           <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Tu PIN es la única forma de acceder a tu cuenta. Si lo cambiás, anotalo bien.</p>
           <button class="btn btn-primary" onclick="openChangePinModal()">🔐 Cambiar PIN</button>
         </div>
+        <div class="card">
+          <div class="card-title">Sesión</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Cerrá sesión para que otro usuario pueda ingresar desde este dispositivo.</p>
+          <button class="btn btn-danger" onclick="doLogout()">🚪 Cerrar sesión</button>
+        </div>
       </div>
       ${showPts&&stats&&stats.total>0?`
       <div class="card">
