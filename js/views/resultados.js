@@ -17,8 +17,8 @@ export function renderResultados(){
       <div><h1 class="view-title">Resultados</h1><p class="view-sub">Tus pronósticos vs los resultados reales</p></div>
       <div class="dash-grid">
         <div class="stat-card teal"><div class="lbl">Puntos totales</div><div class="val">${totalPts+myBonusPts}</div><div class="desc">${totalPts} partidos${myBonusPts?` + ${myBonusPts} bonus`:""}</div></div>
-        <div class="stat-card"><div class="lbl">🎯 Exactos</div><div class="val" style="color:var(--success)">${exactos}</div><div class="desc">5 pts c/u</div></div>
-        <div class="stat-card"><div class="lbl">🔍 Parciales</div><div class="val" style="color:var(--gold)">${parciales}</div><div class="desc">2 pts c/u</div></div>
+        <div class="stat-card"><div class="lbl">🎯 Exactos</div><div class="val" style="color:var(--success)">${exactos}</div><div class="desc">2 pts c/u</div></div>
+        <div class="stat-card"><div class="lbl">🔍 Parciales</div><div class="val" style="color:var(--gold)">${parciales}</div><div class="desc">1 pt c/u</div></div>
         <div class="stat-card"><div class="lbl">❌ Fallados</div><div class="val" style="color:var(--muted)">${fallados+sinPred}</div><div class="desc">${sinPred} sin cargar</div></div>
       </div>
       ${played.length===0

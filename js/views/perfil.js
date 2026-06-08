@@ -59,8 +59,8 @@ export function renderPerfil(){
       <div class="card">
         <div class="card-title">📊 Mis estadísticas</div>
         <div class="stats-grid">
-          <div class="stat-item"><div class="stat-icon">🎯</div><div class="stat-lbl">Exactos</div><div class="stat-val">${stats.exactos}</div><div class="stat-desc">${stats.exactos} × 5pts = ${stats.exactos*5}</div></div>
-          <div class="stat-item"><div class="stat-icon">🔍</div><div class="stat-lbl">Parciales</div><div class="stat-val" style="color:var(--gold)">${stats.parciales}</div><div class="stat-desc">${stats.parciales} × 2pts = ${stats.parciales*2}</div></div>
+          <div class="stat-item"><div class="stat-icon">🎯</div><div class="stat-lbl">Exactos</div><div class="stat-val">${stats.exactos}</div><div class="stat-desc">${stats.exactos} × 2pts = ${stats.exactos*2}</div></div>
+          <div class="stat-item"><div class="stat-icon">🔍</div><div class="stat-lbl">Parciales</div><div class="stat-val" style="color:var(--gold)">${stats.parciales}</div><div class="stat-desc">${stats.parciales} × 1pt = ${stats.parciales}</div></div>
           <div class="stat-item"><div class="stat-icon">📈</div><div class="stat-lbl">Tasa de acierto</div><div class="stat-val">${stats.tasa}%</div><div class="stat-desc">${stats.exactos+stats.parciales} de ${stats.total} pronos</div></div>
           <div class="stat-item"><div class="stat-icon">🔥</div><div class="stat-lbl">Racha máxima</div><div class="stat-val" style="color:var(--warn)">${stats.maxRacha}</div><div class="stat-desc">aciertos seguidos${stats.rachaActual>1?` · actual: ${stats.rachaActual}`:""}</div></div>
           ${stats.lucky?`<div class="stat-item"><div class="stat-icon">🍀</div><div class="stat-lbl">Equipo de la suerte</div><div class="stat-val lucky">${stats.lucky}</div><div class="stat-desc">${stats.luckyRate}% de aciertos</div></div>`:""}

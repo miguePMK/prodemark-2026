@@ -132,8 +132,8 @@ function renderPlayerDashboard(){
           <div class="card">
             <div class="card-title">🎯 Rendimiento</div>
             <div style="display:flex;flex-direction:column;gap:10px">
-              <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Exactos</span><span style="color:var(--success);font-weight:700;font-family:'DM Mono',monospace">${exactos} × 5pts</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Parciales</span><span style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">${parciales} × 2pts</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Exactos</span><span style="color:var(--success);font-weight:700;font-family:'DM Mono',monospace">${exactos} × 2pts</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Parciales</span><span style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace">${parciales} × 1pt</span></div>
               <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Fallados</span><span style="color:var(--muted);font-weight:700;font-family:'DM Mono',monospace">${fallados} × 0pts</span></div>
               <div style="padding-top:10px;border-top:1px solid var(--border)">
                 <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px">
