@@ -48,9 +48,12 @@ export function statusLabel(s){
 }
 export function calcPoints(pred,match){
   if(!match.jugado||pred==null||pred.local==null||pred.visitante==null) return null;
-  if(pred.local===match.resultado_local&&pred.visitante===match.resultado_visitante) return 5;
+  const exacto=pred.local===match.resultado_local&&pred.visitante===match.resultado_visitante;
   const ps=Math.sign(pred.local-pred.visitante),rs=Math.sign(match.resultado_local-match.resultado_visitante);
-  return ps===rs?2:0;
+  const resultado=ps===rs;
+  if(exacto) return 2;      // marcador exacto: 1 (resultado) + 1 (marcador) = 2
+  if(resultado) return 1;   // solo resultado correcto: 1
+  return 0;
 }
 export function calcSpecialPoints(pred,cfg){
   if(!cfg||!cfg.campeon_real||!pred) return null;
