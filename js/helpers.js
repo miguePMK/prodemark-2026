@@ -24,7 +24,7 @@ export function fmtTime(iso){const d=new Date(iso);return `${String(d.getHours()
 export function fmtDateShort(iso){const d=new Date(iso);return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`}
 export function dayKey(iso){const d=new Date(iso);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 export function escapeAttr(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
-export function computeDeadline(fechaIso){const d=new Date(fechaIso);d.setTime(d.getTime()-60*60*1000);return d.toISOString()}
+export function computeDeadline(fechaIso){const d=new Date(fechaIso);d.setTime(d.getTime()-60*1000);return d.toISOString()}
 export function isAdmin(){return state.currentUser&&state.currentUser.role==="admin"}
 export function isClosedOrPlayed(s){return s==="cerrado"||s==="cerrado-manual"||s==="jugado"}
 export function isEditableStatus(s){return s==="abierto"||s==="por-cerrar"||s==="abierto-manual"}
